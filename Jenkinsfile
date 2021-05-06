@@ -3,12 +3,18 @@ pipeline {
 	stages {
 	   stage ('Build') {
 		steps {
+		  checkout scm
 		  sh 'npm install'
 		  sh 'npm run build'
 		  echo 'Building'
 		}
 	   }
 	   stage ('Test') {
+	    when {
+               expression {
+                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+               }
+            }
 		steps {
 		  echo 'Testing'
 		  sh 'npm test'
